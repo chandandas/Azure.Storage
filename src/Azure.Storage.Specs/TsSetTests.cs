@@ -248,9 +248,10 @@ namespace Azure.Storage.Specs
             // ACT
             _result = subject.BatchProcessAsync(
                 new FindByPartitionKey("partitionKey"),
-                async entities =>
+                entities =>
                 {
                     _myProperties.AddRange(entities.Select(f => f.MyProperty));
+                    return Task.Delay(0);
                 }).Result;
         }
 
@@ -363,7 +364,7 @@ namespace Azure.Storage.Specs
             // ACT
             _result = subject.BatchUpdateAsync(
                 tableQuery,
-                async entities =>
+                entities =>
                 {
                     entities.ForEach(e => e.MyProperty = "Test");
                 }).Result;
