@@ -98,7 +98,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Pier8.Azure.TableStorage\Azure.Storage.Table.csproj">
+    <ProjectReference Include="..\Azure.Storage.Table\Azure.Storage.Table.csproj">
       <Project>{3072C7B5-A8B0-4CFE-80A9-BB93E7AD702C}</Project>
       <Name>Azure.Storage.Table</Name>
     </ProjectReference>

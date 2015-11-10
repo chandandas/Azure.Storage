@@ -81,13 +81,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Pier8.Azure.TableStorage\Azure.Storage.Table.csproj">
+    <ProjectReference Include="..\Azure.Storage.Core\Azure.Storage.Core.csproj">
+      <Project>{8d4615dd-3c21-4079-b702-77690e39e56e}</Project>
+      <Name>Azure.Storage.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Azure.Storage.Table\Azure.Storage.Table.csproj">
       <Project>{3072C7B5-A8B0-4CFE-80A9-BB93E7AD702C}</Project>
       <Name>Azure.Storage.Table</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Pier8.Testing.Core\Azure.Storage.Core.csproj">
-      <Project>{8D4615DD-3C21-4079-B702-77690E39E56E}</Project>
-      <Name>Azure.Storage.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
