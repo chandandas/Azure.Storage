@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azure.Storage.Table", "Pier8.Azure.TableStorage\Azure.Storage.Table.csproj", "{3072C7B5-A8B0-4CFE-80A9-BB93E7AD702C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azure.Storage.Testing", "Pier8.Azure.TableStorage.Testing\Azure.Storage.Testing.csproj", "{5BAD51AB-CA23-4565-9694-0B0D472D2BA7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azure.Storage.Core", "Pier8.Testing.Core\Azure.Storage.Core.csproj", "{8D4615DD-3C21-4079-B702-77690E39E56E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azure.Storage.Specs", "Pier8.Azure.TableStorage.Specs\Azure.Storage.Specs.csproj", "{883E7301-2F51-42D8-8D13-7BCFDE77F522}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3072C7B5-A8B0-4CFE-80A9-BB93E7AD702C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3072C7B5-A8B0-4CFE-80A9-BB93E7AD702C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3072C7B5-A8B0-4CFE-80A9-BB93E7AD702C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3072C7B5-A8B0-4CFE-80A9-BB93E7AD702C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BAD51AB-CA23-4565-9694-0B0D472D2BA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BAD51AB-CA23-4565-9694-0B0D472D2BA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BAD51AB-CA23-4565-9694-0B0D472D2BA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BAD51AB-CA23-4565-9694-0B0D472D2BA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D4615DD-3C21-4079-B702-77690E39E56E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D4615DD-3C21-4079-B702-77690E39E56E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D4615DD-3C21-4079-B702-77690E39E56E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D4615DD-3C21-4079-B702-77690E39E56E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{883E7301-2F51-42D8-8D13-7BCFDE77F522}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{883E7301-2F51-42D8-8D13-7BCFDE77F522}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{883E7301-2F51-42D8-8D13-7BCFDE77F522}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{883E7301-2F51-42D8-8D13-7BCFDE77F522}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
