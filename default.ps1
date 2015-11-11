@@ -9,11 +9,11 @@ formatTaskName {
 	write-host $taskName -foregroundcolor Green
 }
 
-task Build -depends Nuget-Restore, Clean { 
-  msbuild /t:Build "src\Azure.Storage.sln"
+task Build -depends Clean, Nuget-Restore { 
+  msbuild /t:Build $filePath
 }
 
-task Test -depends Stop-AzureEmulator, Run-Tests, Start-AzureEmulator { 
+task Test -depends Start-AzureEmulator, Run-Tests, Stop-AzureEmulator { 
   # no op
 }
 
@@ -32,7 +32,7 @@ task Start-AzureEmulator {
 }
 
 task Nuget-Restore { 
-  nuget restore src\Azure.Storage.sln
+  nuget restore $filePath
 }
 
 task Clean { 
