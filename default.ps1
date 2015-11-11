@@ -10,7 +10,7 @@ formatTaskName {
 }
 
 task Build -depends Clean, Nuget-Restore { 
-  msbuild /t:Build $filePath
+  Exec { msbuild /t:Build $filePath }
 }
 
 task Test -depends Start-AzureEmulator, Run-Tests, Stop-AzureEmulator { 
@@ -22,7 +22,7 @@ task Stop-AzureEmulator {
 }
 
 task Run-Tests { 
-  xunit.console.clr4 $filePath /appveyor
+  Exec { xunit.console.clr4 $filePath /appveyor }
 }
 
 task Start-AzureEmulator { 
