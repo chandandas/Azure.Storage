@@ -46,10 +46,9 @@ namespace Azure.Storage.Core
 
             protected override Expression VisitBinary(BinaryExpression node)
             {
-                if (node.NodeType == ExpressionType.And
-                    || node.NodeType == ExpressionType.AndAlso
-                    || node.NodeType == ExpressionType.Or
-                    || node.NodeType == ExpressionType.ExclusiveOr)
+                var nodeType = node.NodeType;
+                if (nodeType == ExpressionType.AndAlso
+                    || nodeType == ExpressionType.OrElse)
                 {
                     var left = Visit(node.Left);
                     var right = Visit(node.Right);
