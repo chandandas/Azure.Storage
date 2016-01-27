@@ -2,34 +2,10 @@
 using System.Linq;
 using Azure.Storage.Specs.Fixtures;
 using Azure.Storage.Specs.TestClasses;
-using Microsoft.WindowsAzure.Storage.Table;
 using Xunit;
 
 namespace Azure.Storage.Specs
 {
-    [Collection("TsSet")]
-    public class WhenConstructingATsSet : IClassFixture<FixtureForConstructingTsSets>
-    {
-        private readonly CloudTable _table;
-
-        public WhenConstructingATsSet(FixtureForConstructingTsSets fixture)
-        {
-            _table = fixture.GetTable();
-        }
-
-        [Fact]
-        public void ShouldCreateTheTable()
-        {
-            Assert.True(_table.Exists(), "Table has been created.");
-        }
-
-        [Fact]
-        public void ShouldHaveTheCorrectName()
-        {
-            Assert.Equal("TestingEntities", _table.Name);
-        }
-    }
-
     [Collection("TsSet")]
     public class WhenAskedToFindOneRecord : IClassFixture<FixtureForFindingOneRecord>
     {
