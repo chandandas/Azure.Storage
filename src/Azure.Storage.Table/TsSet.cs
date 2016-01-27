@@ -16,7 +16,6 @@ namespace Azure.Storage.Table
         public TsSet(ITsTable<T> table)
         {
             _table = table;
-            _table.CreateTableIfNotExists();
         }
         
         public async Task<T> FindAsync(string partitionKey, string rowKey)

@@ -17,10 +17,6 @@ namespace Azure.Storage.Testing
 
         public Dictionary<Tuple<string, string>, T> Entities { get; private set; }
 
-        public void CreateTableIfNotExists()
-        {
-        }
-
         public Task<T> Retrieve(string partitionKey, string rowKey)
         {
             var key = new Tuple<string, string>(partitionKey, rowKey);

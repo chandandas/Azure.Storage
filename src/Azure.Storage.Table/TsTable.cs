@@ -15,11 +15,6 @@ namespace Azure.Storage.Table
             _cloudTable = cloudTable;
         }
 
-        public void CreateTableIfNotExists()
-        {
-            _cloudTable.CreateIfNotExists();
-        }
-
         public async Task<T> Retrieve(string partitionKey, string rowKey)
         {
             var result = await _cloudTable.ExecuteAsync(TableOperation.Retrieve<T>(partitionKey, rowKey));

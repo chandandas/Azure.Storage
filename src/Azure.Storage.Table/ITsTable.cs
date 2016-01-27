@@ -6,8 +6,6 @@ namespace Azure.Storage.Table
 {
     public interface ITsTable<T> where T : TableEntity, new()
     {
-        void CreateTableIfNotExists();
-
         Task<T> Retrieve(string partitionKey, string rowKey);
 
         Task Insert(T entity);
