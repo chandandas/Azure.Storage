@@ -3,11 +3,14 @@ using System.Linq;
 using Azure.Storage.Specs.Fixtures;
 using Azure.Storage.Specs.TestClasses;
 using Xunit;
+using Xunit.Sdk;
+
 
 namespace Azure.Storage.Specs
 {
+
     [Collection("TsSet")]
-    public class WhenAskedToFindOneRecord : IClassFixture<FixtureForFindingOneRecord>
+    public class WhenAskedToFindOneRecord //: IClassFixture<FixtureForFindingOneRecord>
     {
         public WhenAskedToFindOneRecord(FixtureForFindingOneRecord fixture)
         {
@@ -15,13 +18,13 @@ namespace Azure.Storage.Specs
             _expectedEntity = fixture.ExpectedEntity;
         }
         
-        [Fact]
+        [Fact(Skip = "Relies on the storage emulator, which is being removed.")]
         public void ShouldReturnTheEntity()
         {
             Assert.NotNull(_actualEntity);
         }
 
-        [Fact]
+        [Fact(Skip = "Relies on the storage emulator, which is being removed.")]
         public void ShouldReturnThePropertiesCorrectly()
         {
             Assert.Equal(_expectedEntity.PartitionKey, _actualEntity.PartitionKey);
@@ -34,7 +37,7 @@ namespace Azure.Storage.Specs
     }
 
     [Collection("TsSet")]
-    public class WhenAskedToCreateARecord : IClassFixture<FixtureForCreatingRecords>
+    public class WhenAskedToCreateARecord //: IClassFixture<FixtureForCreatingRecords>
     {
         public WhenAskedToCreateARecord(FixtureForCreatingRecords fixture)
         {
@@ -42,13 +45,13 @@ namespace Azure.Storage.Specs
             _expectedEntity = fixture.ExpectedEntity;
         }
 
-        [Fact]
+        [Fact(Skip = "Relies on the storage emulator, which is being removed.")]
         public void ShouldSaveTheEntity()
         {
             Assert.NotNull(_actualEntity);
         }
 
-        [Fact]
+        [Fact(Skip = "Relies on the storage emulator, which is being removed.")]
         public void ShouldSaveThePropertiesCorrectly()
         {
             Assert.Equal(_expectedEntity.PartitionKey, _actualEntity.PartitionKey);
@@ -61,7 +64,7 @@ namespace Azure.Storage.Specs
     }
 
     [Collection("TsSet")]
-    public class WhenAskedToUpdateARecord : IClassFixture<FixtureForUpdatingRecords>
+    public class WhenAskedToUpdateARecord //: IClassFixture<FixtureForUpdatingRecords>
     {
         public WhenAskedToUpdateARecord(FixtureForUpdatingRecords fixture)
         {
@@ -69,13 +72,13 @@ namespace Azure.Storage.Specs
             _expectedEntity = fixture.ExpectedEntity;
         }
 
-        [Fact]
+        [Fact(Skip = "Relies on the storage emulator, which is being removed.")]
         public void ShouldSaveTheEntity()
         {
             Assert.NotNull(_actualEntity);
         }
 
-        [Fact]
+        [Fact(Skip = "Relies on the storage emulator, which is being removed.")]
         public void ShouldSaveThePropertiesCorrectly()
         {
             Assert.Equal(_expectedEntity.PartitionKey, _actualEntity.PartitionKey);
@@ -88,7 +91,7 @@ namespace Azure.Storage.Specs
     }
 
     [Collection("TsSet")]
-    public class WhenAskedToDeleteARecord : IClassFixture<FixtureForDeletingRecords>
+    public class WhenAskedToDeleteARecord //: IClassFixture<FixtureForDeletingRecords>
     {
         public WhenAskedToDeleteARecord(FixtureForDeletingRecords fixture)
         {
@@ -96,7 +99,7 @@ namespace Azure.Storage.Specs
             _actualEntity = fixture.GetEntity(entity.PartitionKey, entity.RowKey);
         }
 
-        [Fact]
+        [Fact(Skip = "Relies on the storage emulator, which is being removed.")]
         public void ShouldDeleteTheEntity()
         {
             Assert.Null(_actualEntity);
@@ -106,7 +109,7 @@ namespace Azure.Storage.Specs
     }
 
     [Collection("TsSet")]
-    public class WhenAskedToQueryForMultipleRecords : IClassFixture<FixtureForQueryingMultipleRecords>
+    public class WhenAskedToQueryForMultipleRecords //: IClassFixture<FixtureForQueryingMultipleRecords>
     {
         public WhenAskedToQueryForMultipleRecords(FixtureForQueryingMultipleRecords fixture)
         {
@@ -114,19 +117,19 @@ namespace Azure.Storage.Specs
             _myPropertyValue = fixture.PropertyValue;
         }
 
-        [Fact]
+        [Fact(Skip = "Relies on the storage emulator, which is being removed.")]
         public void ShouldNotReturnNull()
         {
             Assert.NotNull(_results);
         }
 
-        [Fact]
+        [Fact(Skip = "Relies on the storage emulator, which is being removed.")]
         public void ShouldReturnTheCorrectNumberOfResults()
         {
             Assert.Equal(50, _results.Count());
         }
 
-        [Fact]
+        [Fact(Skip = "Relies on the storage emulator, which is being removed.")]
         public void ShouldReturnThePropertiesCorrectly()
         {
             Assert.True(_results.All(x => x.MyProperty == _myPropertyValue), "Has the correct perperty value.");
