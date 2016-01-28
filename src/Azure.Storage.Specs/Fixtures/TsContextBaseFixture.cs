@@ -1,44 +1,29 @@
-using System;
-using Azure.Storage.Specs.TestClasses;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Table;
-
 namespace Azure.Storage.Specs.Fixtures
 {
+    using System;
+    using System.Collections.Generic;
+    using Microsoft.WindowsAzure.Storage;
+    using Microsoft.WindowsAzure.Storage.Table;
+    using TestClasses;
+
     public class TsContextBaseFixture
     {
-        protected void CreateListOfEntities(int rowCount, string value = null)
+        protected CloudTable Table;
+        protected CloudTableClient TableClient;
+
+        protected IEnumerable<TestingEntity> CreateListOfEntities(int rowCount, string value = null)
         {
-            for (int i = 0; i < rowCount; i++)
+            for (var i = 0; i < rowCount; i++)
             {
-                var entity = new TestingEntity(value ?? Guid.NewGuid().ToString("N"));
-                TableOperation tableOperation = TableOperation.Insert(entity);
-                Table.Execute(tableOperation);
+                yield return new TestingEntity(value ?? Guid.NewGuid().ToString("N"));
             }
         }
 
         protected static CloudTableClient GetTableClient()
         {
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse("UseDevelopmentStorage=true");
-            CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
+            var storageAccount = CloudStorageAccount.Parse("UseDevelopmentStorage=true");
+            var tableClient = storageAccount.CreateCloudTableClient();
             return tableClient;
-        }
-
-        protected TestingEntity CreateEntity()
-        {
-            var testingEntity = new TestingEntity();
-            Table = GetTable();
-
-            TableOperation tableOperation = TableOperation.Insert(testingEntity);
-            Table.Execute(tableOperation);
-            return testingEntity;
-        }
-
-        public TestingEntity GetEntity(string partitionKey, string rowKey)
-        {
-            var table = CreateTable();
-            TableOperation tableOperation = TableOperation.Retrieve<TestingEntity>(partitionKey, rowKey);
-            return table.Execute(tableOperation).Result as TestingEntity;
         }
 
         protected CloudTable CreateTable()
@@ -50,7 +35,7 @@ namespace Azure.Storage.Specs.Fixtures
 
         protected void DeleteTable()
         {
-            CloudTable table = GetTable();
+            var table = GetTable();
             table.DeleteIfExists();
         }
 
@@ -58,8 +43,5 @@ namespace Azure.Storage.Specs.Fixtures
         {
             return TableClient.GetTableReference("TestingEntities");
         }
-
-        protected CloudTable Table;
-        protected CloudTableClient TableClient;
     }
 }

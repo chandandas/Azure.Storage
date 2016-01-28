@@ -5,7 +5,9 @@ using Azure.Storage.Table;
 
 namespace Azure.Storage.Specs.Fixtures
 {
-    public class FixtureForQueryingMultipleRecords : TsContextBaseFixture, IDisposable
+    using Testing;
+
+    public class FixtureForQueryingMultipleRecords : TsContextBaseFixture
     {
         public IEnumerable<TestingEntity> Results;
         public readonly string PropertyValue;
@@ -13,21 +15,15 @@ namespace Azure.Storage.Specs.Fixtures
         public FixtureForQueryingMultipleRecords()
         {
             // ARRANGE
-            TableClient = GetTableClient();
-            Table = CreateTable();
+            var testingEntities = new List<TestingEntity>();
 
             PropertyValue = Guid.NewGuid().ToString("N");
-            CreateListOfEntities(50, PropertyValue);
-            CreateListOfEntities(150);
+            testingEntities.AddRange(CreateListOfEntities(50, PropertyValue));
+            testingEntities.AddRange(CreateListOfEntities(150));
 
-            var subject = new TsSet<TestingEntity>(new TsTable<TestingEntity>(Table));
+            var subject = new TsSet<TestingEntity>(new FakeTsTable<TestingEntity>(testingEntities));
 
             Results = subject.QueryAsync(new FindByMyPropertyQuery(PropertyValue)).Result;
-        }
-
-        public void Dispose()
-        {
-            DeleteTable();
         }
     }
 }

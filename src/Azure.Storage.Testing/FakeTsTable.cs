@@ -59,7 +59,7 @@ namespace Azure.Storage.Testing
 
             if (Entities.ContainsKey(key))
             {
-                throw new Exception();
+                throw new Exception("Key already exists.");
             }
 
             Entities.Add(key, entity);

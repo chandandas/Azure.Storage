@@ -4,16 +4,16 @@ using Azure.Storage.Table;
 
 namespace Azure.Storage.Specs.Fixtures
 {
-    public class FixtureForUpdatingRecords : TsContextBaseFixture, IDisposable
+    using Testing;
+
+    public class FixtureForUpdatingRecords : TsContextBaseFixture
     {
         public TestingEntity ExpectedEntity { get; private set; }
         public TestingEntity ActualEntity { get; private set; }
 
         public FixtureForUpdatingRecords()
         {
-            TableClient = GetTableClient();
-            Table = CreateTable();
-            var originalEntity = CreateEntity();
+            var originalEntity = new TestingEntity();
             ExpectedEntity = new TestingEntity
             {
                 PartitionKey = originalEntity.PartitionKey,
@@ -23,16 +23,12 @@ namespace Azure.Storage.Specs.Fixtures
                 MyProperty = Guid.NewGuid().ToString("N")
             };
 
-            var subject = new TsSet<TestingEntity>(new TsTable<TestingEntity>(Table));
+            var fakeTsTable = new FakeTsTable<TestingEntity>(new[] { originalEntity });
+            var subject = new TsSet<TestingEntity>(fakeTsTable);
 
             // ACT
             subject.UpdateAsync(ExpectedEntity).Wait();
-            ActualEntity = GetEntity(ExpectedEntity.PartitionKey, ExpectedEntity.RowKey);
-        }
-
-        public void Dispose()
-        {
-            DeleteTable();
+            ActualEntity = fakeTsTable.Entities[new Tuple<string, string>(ExpectedEntity.PartitionKey, ExpectedEntity.RowKey)];
         }
     }
 }

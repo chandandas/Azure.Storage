@@ -1,28 +1,33 @@
-﻿using System;
-using Azure.Storage.Specs.TestClasses;
-using Azure.Storage.Table;
-
-namespace Azure.Storage.Specs.Fixtures
+﻿namespace Azure.Storage.Specs.Fixtures
 {
-    public class FixtureForDeletingRecords : TsContextBaseFixture, IDisposable
-    {
-        public TestingEntity Entity { get; private set; }
+    using System;
+    using Table;
+    using TestClasses;
+    using Testing;
 
+    public class FixtureForDeletingRecords : TsContextBaseFixture
+    {
         public FixtureForDeletingRecords()
         {
             // ARRANGE
-            TableClient = GetTableClient();
-            Table = CreateTable();
-            Entity = CreateEntity();
-            var subject = new TsSet<TestingEntity>(new TsTable<TestingEntity>(Table));
+            Entity = new TestingEntity();
+            var fakeTsTable = new FakeTsTable<TestingEntity>(new[] {Entity});
+            var subject = new TsSet<TestingEntity>(fakeTsTable);
 
             // ACT
             subject.DeleteAsync(Entity).Wait();
+
+            try
+            {
+                ActualEntity = fakeTsTable.Entities[new Tuple<string, string>(Entity.PartitionKey, Entity.RowKey)];
+            }
+            catch (Exception)
+            {
+                ActualEntity = null;
+            }
         }
 
-        public void Dispose()
-        {
-            DeleteTable();
-        }
+        public TestingEntity Entity { get; }
+        public TestingEntity ActualEntity { get; }
     }
 }

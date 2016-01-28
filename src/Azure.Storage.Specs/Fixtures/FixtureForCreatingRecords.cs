@@ -1,31 +1,26 @@
-using System;
-using Azure.Storage.Specs.TestClasses;
-using Azure.Storage.Table;
-
 namespace Azure.Storage.Specs.Fixtures
 {
-    public class FixtureForCreatingRecords : TsContextBaseFixture, IDisposable
+    using System;
+    using System.Collections.Generic;
+    using Table;
+    using TestClasses;
+    using Testing;
+
+    public class FixtureForCreatingRecords : TsContextBaseFixture
     {
         public FixtureForCreatingRecords()
         {
-            TableClient = GetTableClient();
-            Table = CreateTable();
-
             ExpectedEntity = new TestingEntity();
-            var subject = new TsSet<TestingEntity>(new TsTable<TestingEntity>(Table));
+            var fakeTsTable = new FakeTsTable<TestingEntity>(new List<TestingEntity>());
+            var subject = new TsSet<TestingEntity>(fakeTsTable);
 
             // ACT
             subject.AddAsync(ExpectedEntity).Wait();
 
-            ActualEntity = GetEntity(ExpectedEntity.PartitionKey, ExpectedEntity.RowKey);
-        }
-
-        public void Dispose()
-        {
-            DeleteTable();
+            ActualEntity = fakeTsTable.Entities[new Tuple<string, string>(ExpectedEntity.PartitionKey, ExpectedEntity.RowKey)];
         }
 
         public TestingEntity ActualEntity { get; private set; }
-        public TestingEntity ExpectedEntity { get; private set; }
+        public TestingEntity ExpectedEntity { get; }
     }
 }

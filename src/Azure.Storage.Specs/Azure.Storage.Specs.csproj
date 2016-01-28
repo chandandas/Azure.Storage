@@ -114,6 +114,10 @@
       <Project>{3072C7B5-A8B0-4CFE-80A9-BB93E7AD702C}</Project>
       <Name>Azure.Storage.Table</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Azure.Storage.Testing\Azure.Storage.Testing.csproj">
+      <Project>{5BAD51AB-CA23-4565-9694-0B0D472D2BA7}</Project>
+      <Name>Azure.Storage.Testing</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

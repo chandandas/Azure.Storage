@@ -1,28 +1,21 @@
-﻿using System;
-using Azure.Storage.Specs.TestClasses;
-using Azure.Storage.Table;
-
-namespace Azure.Storage.Specs.Fixtures
+﻿namespace Azure.Storage.Specs.Fixtures
 {
-    public class FixtureForFindingOneRecord : TsContextBaseFixture, IDisposable
+    using Table;
+    using TestClasses;
+    using Testing;
+
+    public class FixtureForFindingOneRecord : TsContextBaseFixture
     {
         public FixtureForFindingOneRecord()
         {
-            TableClient = GetTableClient();
-            Table = CreateTable();
-            ExpectedEntity = CreateEntity();
-            var subject = new TsSet<TestingEntity>(new TsTable<TestingEntity>(Table));
+            ExpectedEntity = new TestingEntity();
+            var subject = new TsSet<TestingEntity>(new FakeTsTable<TestingEntity>(new[] {ExpectedEntity}));
 
             // ACT
             ActualEntity = subject.FindAsync(ExpectedEntity.PartitionKey, ExpectedEntity.RowKey).Result;
         }
 
-        public void Dispose()
-        {
-            DeleteTable();
-        }
-
-        public TestingEntity ActualEntity { get; set; }
-        public TestingEntity ExpectedEntity { get; set; }
+        public TestingEntity ActualEntity { get; private set; }
+        public TestingEntity ExpectedEntity { get; }
     }
 }
