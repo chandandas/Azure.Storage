@@ -3,7 +3,7 @@ using Azure.Storage.Table;
 
 namespace Azure.Storage.Specs.Fixtures
 {
-    public class FixtureForInitialisingATsContext : TsContextBaseFixture
+    public class FixtureForInitialisingATsContext
     {
         public TestingContext Context { get; private set; }
 

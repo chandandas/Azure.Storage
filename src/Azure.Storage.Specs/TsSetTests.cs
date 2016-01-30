@@ -1,22 +1,27 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Azure.Storage.Specs.Fixtures;
-using Azure.Storage.Specs.TestClasses;
-using Xunit;
-using Xunit.Sdk;
-
-
-namespace Azure.Storage.Specs
+﻿namespace Azure.Storage.Specs
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Fixtures;
+    using Microsoft.WindowsAzure.Storage.Table;
+    using Table;
+    using TestClasses;
+    using Testing;
+    using Xunit;
+
     [Collection("TsSet")]
     public class WhenAskedToFindOneRecord : IClassFixture<FixtureForFindingOneRecord>
     {
+        private readonly TestingEntity _actualEntity;
+        private readonly TestingEntity _expectedEntity;
+
         public WhenAskedToFindOneRecord(FixtureForFindingOneRecord fixture)
         {
             _actualEntity = fixture.ActualEntity;
             _expectedEntity = fixture.ExpectedEntity;
         }
-        
+
         [Fact]
         public void ShouldReturnTheEntity()
         {
@@ -30,14 +35,14 @@ namespace Azure.Storage.Specs
             Assert.Equal(_expectedEntity.RowKey, _actualEntity.RowKey);
             Assert.Equal(_expectedEntity.MyProperty, _actualEntity.MyProperty);
         }
-
-        private readonly TestingEntity _actualEntity;
-        private readonly TestingEntity _expectedEntity;
     }
 
     [Collection("TsSet")]
     public class WhenAskedToCreateARecord : IClassFixture<FixtureForCreatingRecords>
     {
+        private readonly TestingEntity _actualEntity;
+        private readonly TestingEntity _expectedEntity;
+
         public WhenAskedToCreateARecord(FixtureForCreatingRecords fixture)
         {
             _actualEntity = fixture.ActualEntity;
@@ -57,14 +62,14 @@ namespace Azure.Storage.Specs
             Assert.Equal(_expectedEntity.RowKey, _actualEntity.RowKey);
             Assert.Equal(_expectedEntity.MyProperty, _actualEntity.MyProperty);
         }
-
-        private readonly TestingEntity _actualEntity;
-        private readonly TestingEntity _expectedEntity;
     }
 
     [Collection("TsSet")]
     public class WhenAskedToUpdateARecord : IClassFixture<FixtureForUpdatingRecords>
     {
+        private readonly TestingEntity _actualEntity;
+        private readonly TestingEntity _expectedEntity;
+
         public WhenAskedToUpdateARecord(FixtureForUpdatingRecords fixture)
         {
             _actualEntity = fixture.ActualEntity;
@@ -84,9 +89,6 @@ namespace Azure.Storage.Specs
             Assert.Equal(_expectedEntity.RowKey, _actualEntity.RowKey);
             Assert.Equal(_expectedEntity.MyProperty, _actualEntity.MyProperty);
         }
-
-        private readonly TestingEntity _actualEntity;
-        private readonly TestingEntity _expectedEntity;
     }
 
     [Collection("TsSet")]
@@ -109,6 +111,9 @@ namespace Azure.Storage.Specs
     [Collection("TsSet")]
     public class WhenAskedToQueryForMultipleRecords : IClassFixture<FixtureForQueryingMultipleRecords>
     {
+        private readonly string _myPropertyValue;
+        private readonly IEnumerable<TestingEntity> _results;
+
         public WhenAskedToQueryForMultipleRecords(FixtureForQueryingMultipleRecords fixture)
         {
             _results = fixture.Results;
@@ -132,155 +137,155 @@ namespace Azure.Storage.Specs
         {
             Assert.True(_results.All(x => x.MyProperty == _myPropertyValue), "Has the correct perperty value.");
         }
-
-        private readonly string _myPropertyValue;
-        private readonly IEnumerable<TestingEntity> _results;
     }
 
-    //[Collection("TsSet")]
-    //public class WhenAskedToProcessABatchOfRecords : IClassFixture<FixtureForProcessingABatchOfRecords>
-    //{
-    //    public WhenAskedToProcessABatchOfRecords(FixtureForProcessingABatchOfRecords fixture)
-    //    {
-    //        _result = fixture.Result;
-    //        _myProperties = fixture.MyProperties;
-    //    }
+    [Collection("TsSet")]
+    public class WhenAskedToProcessABatchOfRecords : IClassFixture<FixtureForProcessingABatchOfRecords>
+    {
+        private readonly List<string> _myProperties;
 
-    //    [Fact]
-    //    public void ShouldReturnTheCorrectBatchesResult()
-    //    {
-    //        Assert.Equal(2, _result.Batches);
-    //    }
+        private readonly BatchProcessResult _result;
 
-    //    [Fact]
-    //    public void ShouldReturnTheCorrectEntitiesProcessedResult()
-    //    {
-    //        Assert.Equal(600, _result.EntitiesProcessed);
-    //    }
+        public WhenAskedToProcessABatchOfRecords(FixtureForProcessingABatchOfRecords fixture)
+        {
+            _result = fixture.Result;
+            _myProperties = fixture.MyProperties;
+        }
 
-    //    [Fact]
-    //    public void ShouldHaveProcessedItems()
-    //    {
-    //        Assert.Equal(600, _myProperties.Count);
-    //    }
+        [Fact]
+        public void ShouldReturnTheCorrectBatchesResult()
+        {
+            Assert.Equal(2, _result.Batches);
+        }
 
-    //    private readonly BatchProcessResult _result;
-    //    private readonly List<string> _myProperties;
-    //}
+        [Fact]
+        public void ShouldReturnTheCorrectEntitiesProcessedResult()
+        {
+            Assert.Equal(600, _result.EntitiesProcessed);
+        }
 
-    //[Collection("TsSet")]
-    //public class WhenAskedToCreateABatchOfRecords : IClassFixture<FixtureForCreatingBatchsOfRecords>
-    //{
-    //    public WhenAskedToCreateABatchOfRecords(FixtureForCreatingBatchsOfRecords fixture)
-    //    {
-    //        _result = fixture.Result;
-    //        _table = fixture.GetTable();
-    //    }
+        [Fact]
+        public void ShouldHaveProcessedItems()
+        {
+            Assert.Equal(600, _myProperties.Count);
+        }
+    }
 
-    //    [Fact]
-    //    public void ShouldHaveRanCreateBatches()
-    //    {
-    //        Assert.Equal(6, _result.Batches);
-    //    }
+    [Collection("TsSet")]
+    public class WhenAskedToCreateABatchOfRecords : IClassFixture<FixtureForCreatingBatchsOfRecords>
+    {
+        private readonly BatchAddResult _result;
 
-    //    [Fact]
-    //    public void ShouldHaveCreatedEntities()
-    //    {
-    //        Assert.Equal(600, _result.EntitiesCreated);
-    //    }
+        private readonly ITsTable<TestingEntity> _table;
 
-    //    [Fact]
-    //    public async Task ShouldHaveCreatedRecordsInTable()
-    //    {
-    //        var actual = await _table.ExecuteQuerySegmentedAsync(new TableQuery<TestingEntity>(), null);
-    //        Assert.Equal(600, actual.Results.Count);
-    //    }
+        public WhenAskedToCreateABatchOfRecords(FixtureForCreatingBatchsOfRecords fixture)
+        {
+            _result = fixture.Result;
+            _table = fixture.TsTable;
+        }
 
-    //    private readonly CloudTable _table;
-    //    private readonly BatchAddResult _result;
-    //}
+        [Fact]
+        public void ShouldHaveRanCreateBatches()
+        {
+            Assert.Equal(6, _result.Batches);
+        }
 
-    //[Collection("TsSet")]
-    //public class WhenAskedToDeleteABatchOfRecords : IClassFixture<FixtureForDeletingBatchsOfRecords>
-    //{
-    //    public WhenAskedToDeleteABatchOfRecords(FixtureForDeletingBatchsOfRecords fixture)
-    //    {
-    //        _result = fixture.Result;
-    //        _table = fixture.GetTable();
-    //    }
+        [Fact]
+        public void ShouldHaveCreatedEntities()
+        {
+            Assert.Equal(600, _result.EntitiesCreated);
+        }
 
-    //    [Fact]
-    //    public void ShouldReturnTheCorrectBatchesResult()
-    //    {
-    //        Assert.Equal(2, _result.Batches);
-    //    }
+        [Fact]
+        public async Task ShouldHaveCreatedRecordsInTable()
+        {
+            var actual = await _table.ExecuteQuerySegmentedAsync(new TableQuery<TestingEntity>().Take(1000), null);
+            Assert.Equal(600, actual.Results.Count);
+        }
+    }
 
-    //    [Fact]
-    //    public void ShouldReturnTheCorrectDeleteBatchesResult()
-    //    {
-    //        Assert.Equal(6, _result.DeleteBatches);
-    //    }
+    [Collection("TsSet")]
+    public class WhenAskedToDeleteABatchOfRecords : IClassFixture<FixtureForDeletingBatchsOfRecords>
+    {
+        public WhenAskedToDeleteABatchOfRecords(FixtureForDeletingBatchsOfRecords fixture)
+        {
+            _result = fixture.Result;
+            _table = fixture.TsTable;
+        }
 
-    //    [Fact]
-    //    public void ShouldReturnTheCorrectEntitesDeletedResult()
-    //    {
-    //        Assert.Equal(600, _result.EntitiesDeleted);
-    //    }
+        [Fact]
+        public void ShouldReturnTheCorrectBatchesResult()
+        {
+            Assert.Equal(2, _result.Batches);
+        }
 
-    //    [Fact]
-    //    public void ShouldNotHaveAnyPostsInNewsFeed()
-    //    {
-    //        var query = new TableQuery<TestingEntity>()
-    //           .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "partitionKey"));
+        [Fact]
+        public void ShouldReturnTheCorrectDeleteBatchesResult()
+        {
+            Assert.Equal(6, _result.DeleteBatches);
+        }
 
-    //        var actual = _table.ExecuteQuerySegmentedAsync(query, null).Result;
+        [Fact]
+        public void ShouldReturnTheCorrectEntitesDeletedResult()
+        {
+            Assert.Equal(600, _result.EntitiesDeleted);
+        }
 
-    //        Assert.Equal(0, actual.Results.Count);
-    //    }
+        [Fact]
+        public void ShouldHaveDeletedItemsInTable()
+        {
+            var query = new TableQuery<TestingEntity>()
+               .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "partitionKey"))
+               .Take(1000);
 
-    //    private readonly BatchDeleteResult _result;
-    //    private CloudTable _table;
-    //}
+            var actual = _table.ExecuteQuerySegmentedAsync(query, null).Result;
 
-    //[Collection("TsSet")]
-    //public class WhenAskedToUpdateABatchOfRecords : IClassFixture<FixtureForUpdatingBatchsOfRecords>
-    //{
-    //    public WhenAskedToUpdateABatchOfRecords(FixtureForUpdatingBatchsOfRecords fixture)
-    //    {
-    //        _result = fixture.Result;
-    //        _table = fixture.GetTable();
-    //    }
+            Assert.Equal(0, actual.Results.Count);
+        }
 
-    //    [Fact]
-    //    public void ShouldReturnTheCorrectBatchesResult()
-    //    {
-    //        Assert.Equal(2, _result.Batches);
-    //    }
+        private readonly BatchDeleteResult _result;
+        private readonly ITsTable<TestingEntity> _table;
+    }
 
-    //    [Fact]
-    //    public void ShouldReturnTheCorrectUpdateBatchesResult()
-    //    {
-    //        Assert.Equal(6, _result.UpdatedBatches);
-    //    }
+    [Collection("TsSet")]
+    public class WhenAskedToUpdateABatchOfRecords : IClassFixture<FixtureForUpdatingBatchsOfRecords>
+    {
+        public WhenAskedToUpdateABatchOfRecords(FixtureForUpdatingBatchsOfRecords fixture)
+        {
+            _result = fixture.Result;
+            _table = fixture.TsTable;
+        }
 
-    //    [Fact]
-    //    public void ShouldReturnTheCorrectEntitesUpdatedResult()
-    //    {
-    //        Assert.Equal(600, _result.EntitiesUpdated);
-    //    }
+        [Fact]
+        public void ShouldReturnTheCorrectBatchesResult()
+        {
+            Assert.Equal(2, _result.Batches);
+        }
 
-    //    [Fact]
-    //    public void ShouldNotHaveAnyPostsInNewsFeed()
-    //    {
-    //        var query = new TableQuery<TestingEntity>()
-    //           .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "partitionKey"));
+        [Fact]
+        public void ShouldReturnTheCorrectUpdateBatchesResult()
+        {
+            Assert.Equal(6, _result.UpdatedBatches);
+        }
 
-    //        var actual = _table.ExecuteQuerySegmentedAsync(query, null).Result;
+        [Fact]
+        public void ShouldReturnTheCorrectEntitesUpdatedResult()
+        {
+            Assert.Equal(600, _result.EntitiesUpdated);
+        }
 
-    //        Assert.True(actual.Results.All(e => e.MyProperty == "Test"));
-    //    }
+        [Fact]
+        public void ShouldHaveUpdatedItemsInTable()
+        {
+            var query = new TableQuery<TestingEntity>()
+               .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "partitionKey"));
 
-    //    private readonly CloudTable _table;
-    //    private readonly BatchUpdateResult _result;
-    //}
+            var actual = _table.ExecuteQuerySegmentedAsync(query, null).Result;
+
+            Assert.True(actual.Results.All(e => e.MyProperty == "Test"));
+        }
+
+        private readonly BatchUpdateResult _result;
+        private readonly ITsTable<TestingEntity> _table;
+    }
 }

@@ -5,7 +5,7 @@
     using TestClasses;
     using Testing;
 
-    public class FixtureForDeletingRecords : TsContextBaseFixture
+    public class FixtureForDeletingRecords
     {
         public FixtureForDeletingRecords()
         {

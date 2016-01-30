@@ -75,7 +75,7 @@ namespace Azure.Storage.Table
                await _table.BatchInsertOrMerge(batch);
             }
 
-            return new BatchAddResult(batches.Count, entities.Count());
+            return new BatchAddResult(batches.Count, entities.Count);
         }
 
         /// <summary>
@@ -106,7 +106,9 @@ namespace Azure.Storage.Table
                 await action(tableQueryResult.Results);
 
                 entitiesProcessed += tableQueryResult.Results.Count;
-                batches++;
+
+                if(tableQueryResult.Results.Count > 0)
+                    batches++;
             }
             while (continuationToken != null);
 
@@ -125,22 +127,27 @@ namespace Azure.Storage.Table
 
             TableContinuationToken continuationToken = null;
             var tableQuery = new TableQuery<T>().Where(query.Query).Take(MAX_BATCH_COUNT);
+            
             var batches = 0;
             var deleteBatches = 0;
             var entitiesDeleted = 0;
+            List<T> entitiesToDelete = new List<T>();
 
             do
             {
                 var tableQueryResult = await _table.ExecuteQuerySegmentedAsync(tableQuery, continuationToken);
-
                 continuationToken = tableQueryResult.ContinuationToken;
 
-                var results = await DeleteInBatchesAsync(tableQueryResult);
-                deleteBatches += results.Item1;
-                entitiesDeleted += results.Item2;
-                batches++;
+                entitiesToDelete.AddRange(tableQueryResult.Results);
+
+                if (tableQueryResult.Results.Count > 0)
+                    batches++;
             }
             while (continuationToken != null);
+
+            var results = await DeleteInBatchesAsync(entitiesToDelete);
+            deleteBatches += results.Item1;
+            entitiesDeleted += results.Item2;
 
             return new BatchDeleteResult(batches, deleteBatches, entitiesDeleted);
         }
@@ -176,7 +183,9 @@ namespace Azure.Storage.Table
                 var results = await UpdateInBatchesAsync(tableQueryResult);
                 updatedBatches += results.Item1;
                 entitiesUpdated += results.Item2;
-                batches++;
+
+                if (tableQueryResult.Results.Count > 0)
+                    batches++;
             }
             while (continuationToken != null);
 
@@ -201,12 +210,12 @@ namespace Azure.Storage.Table
             return new Tuple<int, int>(updateBatches, entitiesUpdated);
         }
 
-        private async Task<Tuple<int, int>> DeleteInBatchesAsync(TsQueryResult<T> tableQueryResult)
+        private async Task<Tuple<int, int>> DeleteInBatchesAsync(List<T> tableQueryResult)
         {
             var deleteBatches = 0;
             var entitiesDeleted = 0;
 
-            var batches = BatchIt(tableQueryResult.Results);
+            var batches = BatchIt(tableQueryResult);
 
             foreach (var batch in batches)
             {

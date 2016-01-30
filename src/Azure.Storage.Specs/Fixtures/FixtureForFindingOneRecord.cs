@@ -4,7 +4,7 @@
     using TestClasses;
     using Testing;
 
-    public class FixtureForFindingOneRecord : TsContextBaseFixture
+    public class FixtureForFindingOneRecord
     {
         public FixtureForFindingOneRecord()
         {

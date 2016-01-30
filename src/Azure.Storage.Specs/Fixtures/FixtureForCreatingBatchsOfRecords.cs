@@ -1,37 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using Azure.Storage.Specs.TestClasses;
-using Azure.Storage.Table;
-
-namespace Azure.Storage.Specs.Fixtures
+﻿namespace Azure.Storage.Specs.Fixtures
 {
-    public class FixtureForCreatingBatchsOfRecords : TsContextBaseFixture, IDisposable
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Table;
+    using TestClasses;
+    using Testing;
+
+    public class FixtureForCreatingBatchsOfRecords
     {
-        public BatchAddResult Result { get; private set; }
+        private readonly FakeTsTable<TestingEntity> _fakeTsTable;
 
         public FixtureForCreatingBatchsOfRecords()
         {
             // ARRANGE
-            TableClient = GetTableClient();
-            Table = CreateTable();
+            var testingEntites = Enumerable.Range(0, 600)
+                .Select(i => new TestingEntity("partitionKey", Guid.NewGuid().ToString(), Guid.NewGuid().ToString()));
 
-            var testingEntites = new List<TestingEntity>();
-
-            for (var i = 0; i < 600; i++)
-            {
-                testingEntites.Add(
-                    new TestingEntity("partitionKey", Guid.NewGuid().ToString(), Guid.NewGuid().ToString()));
-            }
-
-            var subject = new TsSet<TestingEntity>(new TsTable<TestingEntity>(Table));
+            _fakeTsTable = new FakeTsTable<TestingEntity>(new List<TestingEntity>());
+            var subject = new TsSet<TestingEntity>(_fakeTsTable);
 
             // ACT
-            Result = subject.BatchAddAsync(testingEntites).Result;
+            Result = subject.BatchAddAsync(testingEntites.ToList()).Result;
         }
 
-        public void Dispose()
-        {
-            DeleteTable();
-        }
+        public BatchAddResult Result { get; private set; }
+
+        public FakeTsTable<TestingEntity> TsTable => _fakeTsTable;
     }
 }

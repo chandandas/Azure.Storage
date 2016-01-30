@@ -6,7 +6,7 @@ namespace Azure.Storage.Specs.Fixtures
     using TestClasses;
     using Testing;
 
-    public class FixtureForCreatingRecords : TsContextBaseFixture
+    public class FixtureForCreatingRecords
     {
         public FixtureForCreatingRecords()
         {

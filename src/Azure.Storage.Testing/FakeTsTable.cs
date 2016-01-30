@@ -30,24 +30,24 @@ namespace Azure.Storage.Testing
 
         public Task<TsQueryResult<T>> ExecuteQuerySegmentedAsync(TableQuery<T> tableQuery, TableContinuationToken continuationToken)
         {
-            var queryString = tableQuery.FilterString
-                                        .Replace(" eq ", "=")
-                                        .Replace(" ne ", "!=")
-                                        .Replace(" gt ", ">")
-                                        .Replace(" lt ", "<")
-                                        .Replace(" ge ", ">=")
-                                        .Replace(" le ", "<=")
-                                        .Replace("'", "\"");
-
+            var queryString = !string.IsNullOrEmpty(tableQuery.FilterString) 
+                ? tableQuery.FilterString.Replace(" eq ", "=").Replace(" ne ", "!=")
+                    .Replace(" gt ", ">").Replace(" lt ", "<").Replace(" ge ", ">=")
+                    .Replace(" le ", "<=").Replace("'", "\"")
+                :string.Empty;
+            
             var skip = Convert.ToInt32(continuationToken == null ? "0" : continuationToken.NextPartitionKey);
 
-            var results = Entities.Values.Where(queryString).Skip(skip).Take(500).ToList();
+            var takeCount = tableQuery.TakeCount ?? 1000;
+            var results = string.IsNullOrEmpty(queryString) 
+                ? Entities.Values.Skip(skip).Take(takeCount).ToList()
+                : Entities.Values.Where(queryString).Skip(skip).Take(takeCount).ToList();
 
             TableContinuationToken returnContinuationToken = null;
 
             if (results.Any())
             {
-                returnContinuationToken = new TableContinuationToken { NextPartitionKey = Convert.ToString(skip + 500) };
+                returnContinuationToken = new TableContinuationToken { NextPartitionKey = Convert.ToString(skip + takeCount) };
             }
 
             return Task.FromResult(new TsQueryResult<T>(results, returnContinuationToken));

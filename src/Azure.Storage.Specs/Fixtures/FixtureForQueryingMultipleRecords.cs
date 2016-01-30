@@ -7,7 +7,7 @@ namespace Azure.Storage.Specs.Fixtures
 {
     using Testing;
 
-    public class FixtureForQueryingMultipleRecords : TsContextBaseFixture
+    public class FixtureForQueryingMultipleRecords
     {
         public IEnumerable<TestingEntity> Results;
         public readonly string PropertyValue;
@@ -24,6 +24,14 @@ namespace Azure.Storage.Specs.Fixtures
             var subject = new TsSet<TestingEntity>(new FakeTsTable<TestingEntity>(testingEntities));
 
             Results = subject.QueryAsync(new FindByMyPropertyQuery(PropertyValue)).Result;
+        }
+
+        private IEnumerable<TestingEntity> CreateListOfEntities(int rowCount, string value = null)
+        {
+            for (var i = 0; i < rowCount; i++)
+            {
+                yield return new TestingEntity(value ?? Guid.NewGuid().ToString("N"));
+            }
         }
     }
 }

@@ -7,27 +7,24 @@ using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Azure.Storage.Specs.Fixtures
 {
-    public class FixtureForUpdatingBatchsOfRecords : TsContextBaseFixture, IDisposable
+    using Testing;
+
+    public class FixtureForUpdatingBatchsOfRecords
     {
+        private FakeTsTable<TestingEntity> _fakeTsTable;
         public BatchUpdateResult Result { get; private set; }
+
+        public FakeTsTable<TestingEntity> TsTable => _fakeTsTable;
 
         public FixtureForUpdatingBatchsOfRecords()
         {
             // ARRANGE
-            TableClient = GetTableClient();
-            Table = CreateTable();
-
-            var tasks = Enumerable.Range(0, 600).Select(i =>
-            {
-                var op = TableOperation.Insert(new TestingEntity("partitionKey", Guid.NewGuid().ToString(), Guid.NewGuid().ToString()));
-                return Table.ExecuteAsync(op);
-            });
-
-            Task.WhenAll(tasks).Wait();
+            var seed = Enumerable.Range(0, 600).Select(i => new TestingEntity("partitionKey", Guid.NewGuid().ToString(), Guid.NewGuid().ToString()));
 
             var tableQuery = new TableQuery<TestingEntity>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "partitionKey"));
 
-            var subject = new TsSet<TestingEntity>(new TsTable<TestingEntity>(Table));
+            _fakeTsTable = new FakeTsTable<TestingEntity>(seed);
+            var subject = new TsSet<TestingEntity>(_fakeTsTable);
 
             // ACT
             Result = subject.BatchUpdateAsync(
@@ -36,11 +33,6 @@ namespace Azure.Storage.Specs.Fixtures
                 {
                     entities.ForEach(e => e.MyProperty = "Test");
                 }).Result;
-        }
-
-        public void Dispose()
-        {
-            DeleteTable();
         }
     }
 }

@@ -6,7 +6,7 @@ namespace Azure.Storage.Specs.Fixtures
 {
     using Testing;
 
-    public class FixtureForUpdatingRecords : TsContextBaseFixture
+    public class FixtureForUpdatingRecords
     {
         public TestingEntity ExpectedEntity { get; private set; }
         public TestingEntity ActualEntity { get; private set; }

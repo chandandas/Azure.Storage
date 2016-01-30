@@ -1,37 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Azure.Storage.Specs.TestClasses;
-using Azure.Storage.Table;
-using Microsoft.WindowsAzure.Storage.Table;
-
-namespace Azure.Storage.Specs.Fixtures
+﻿namespace Azure.Storage.Specs.Fixtures
 {
-    public class FixtureForProcessingABatchOfRecords : TsContextBaseFixture, IDisposable
-    {
-        public List<string> MyProperties { get; private set; }
-        public BatchProcessResult Result { get; private set; }
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Table;
+    using TestClasses;
+    using Testing;
 
+    public class FixtureForProcessingABatchOfRecords
+    {
         public FixtureForProcessingABatchOfRecords()
         {
             // ARRANGE
-            TableClient = GetTableClient();
-            Table = CreateTable();
+            var seed = Enumerable.Range(0, 600)
+                    .Select(i => new TestingEntity("partitionKey", Guid.NewGuid().ToString(), Guid.NewGuid().ToString()));
 
-            var tasks = Enumerable.Range(0, 600).Select(i =>
-            {
-                var op = TableOperation.Insert(new TestingEntity("partitionKey", Guid.NewGuid().ToString(), Guid.NewGuid().ToString()));
-                return Table.ExecuteAsync(op);
-            });
-
-            Task.WhenAll(tasks).Wait();
-
-            MyProperties = new List<string>();
-
-            var subject = new TsSet<TestingEntity>(new TsTable<TestingEntity>(Table));
+            var subject = new TsSet<TestingEntity>(new FakeTsTable<TestingEntity>(seed));
 
             // ACT
+            MyProperties = new List<string>();
             Result = subject.BatchProcessAsync(
                 new FindByPartitionKey("partitionKey"),
                 entities =>
@@ -40,10 +28,8 @@ namespace Azure.Storage.Specs.Fixtures
                     return Task.Delay(0);
                 }).Result;
         }
-        
-        public void Dispose()
-        {
-            DeleteTable();
-        }
+
+        public List<string> MyProperties { get; }
+        public BatchProcessResult Result { get; private set; }
     }
 }
